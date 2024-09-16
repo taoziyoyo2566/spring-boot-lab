@@ -1,0 +1,36 @@
+version: '3.8'
+services:
+  gateway-service:
+    build:
+      context: ../..
+      dockerfile: Dockerfile.gateway-service
+    ports:
+      - "8080:8080"
+    depends_on:
+      - user-service
+  user-service:
+    build:
+      context: ../..
+      dockerfile: Dockerfile.user-service
+    ports:
+      - "8081:8081"
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+    depends_on:
+      - db
+  db:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: user_db_dev
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password_dev
+    ports:
+      - "25432:5432"
+  frontend:
+    build:
+      context: ../frontend
+      dockerfile: Dockerfile.frontend
+    ports:
+      - "3000:3000"
+    depends_on:
+      - gateway-service

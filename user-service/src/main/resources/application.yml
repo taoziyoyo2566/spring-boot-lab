@@ -1,0 +1,14 @@
+spring:
+  application:
+    name: user-service
+  profiles:
+    active: stage
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: refresh
+
+custom:
+  welcome-message: "Hello from User Service!"
