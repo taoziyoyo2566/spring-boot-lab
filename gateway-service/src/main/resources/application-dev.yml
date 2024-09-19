@@ -5,22 +5,16 @@ spring:
     gateway:
       routes:
         - id: user-service
-          uri: http://localhost:8082
+          uri: http://154.23.243.155:8089
           predicates:
             - Path=/users/**
       globalcors:
         cors-configurations:
           '[/**]':
-            allowedOrigins: "http://154.23.243.155:3000"
-
-            allowedMethods:
-              - GET
-              - POST
-              - PUT
-              - DELETE
-              - OPTIONS
+            allowedOrigins: "*"
             allowedHeaders: "*"
-            allowCredentials: true
-
+            allowedMethods: "*"
+      default-filters:
+        - DedupeResponseHeader=Vary Access-Control-Allow-Origin Access-Control-Allow-Credentials, RETAIN_FIRST
 server:
   port: 8080
