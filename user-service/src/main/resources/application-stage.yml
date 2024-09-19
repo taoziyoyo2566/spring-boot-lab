@@ -8,13 +8,46 @@ spring:
     hibernate:
       ddl-auto: none
     show-sql: false
-  flyway:
-    enabled: true
-    locations: classpath:db/migration
-    schemas: stage
-    placeholders:
-      schema: stage
-mybatis:
-  mapper-locations: classpath:mapper/*.xml
+#  flyway:
+#    enabled: true
+#    locations: classpath:db/migration
+#    schemas: stage
+#    placeholders:
+#      schema: stage
+#mybatis:
+#  mapper-locations: classpath:mapper/*.xml
 server:
-  port: 8082
+  port: 1082
+
+
+management:
+  endpoint:
+    health:
+      show-details: always
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics  # 开放健康检查和指标监控
+
+logging:
+  level:
+    root: WARN  # 生产环境中减少日志输出，减少 IO 开销
+    org.springframework.cloud.gateway: INFO
+  file:
+    #    path: /var/log/gateway-service  # 日志文件保存路径
+    name: gateway-service.log
+    path: logs
+
+  logback:
+    rollingpolicy:
+      max-file-size: 10MB
+      max-history: 30
+      clean-history-on-start: false
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/  # 使用服务发现
+  instance:
+    preferIpAddress: true
+    lease-renewal-interval-in-seconds: 10  # 服务注册续约频率
+    lease-expiration-duration-in-seconds: 30  # 服务过期时间
