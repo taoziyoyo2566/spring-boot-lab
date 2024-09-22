@@ -1,0 +1,12 @@
+spring:
+  config:
+    import: optional:configserver:http://localhost:1083/gateway-service/
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: refresh  # 暴露 refresh 端点
+  endpoint:
+    refresh:
+      enabled: true  # 启用 refresh 端点

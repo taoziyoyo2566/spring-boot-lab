@@ -1,0 +1,5 @@
+spring:
+  application:
+    name: stub-service
+  profiles:
+    active: native

@@ -1,0 +1,47 @@
+# setup server port
+server:
+  port: 1090
+
+# setup local h2 database config
+spring:
+  devtools:
+    restart:
+      enabled: true
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: update
+  datasource:
+    url: jdbc:h2:file:./data/demo
+    driverClassName: org.h2.Driver
+    username: admin
+    password: admin
+
+logging:
+  level:
+    root: WARN  # 生产环境中减少日志输出，减少 IO 开销
+    com.netflix.discovery: DEBUG
+    org.springframework.cloud.netflix.eureka: DEBUG
+  file:
+    #    path: /var/log/gateway-service  # 日志文件保存路径
+    name: stub-service.log
+    path: logs
+
+  logback:
+    rollingpolicy:
+      max-file-size: 10MB
+      max-history: 30
+      clean-history-on-start: false
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/  # 使用服务发现
+    enabled: true
+  instance:
+    preferIpAddress: true
+    lease-renewal-interval-in-seconds: 10  # 服务注册续约频率
+    lease-expiration-duration-in-seconds: 30  # 服务过期时间

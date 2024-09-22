@@ -2,13 +2,16 @@ spring:
   application:
     name: user-service
   profiles:
-    active: stage
+    active: native
 
 management:
+  endpoint:
+    health:
+      show-details: always
   endpoints:
     web:
       exposure:
-        include: refresh
+        include: health,info,metrics  # 开放健康检查和指标监控
 
 custom:
   welcome-message: "Hello from User Service!"

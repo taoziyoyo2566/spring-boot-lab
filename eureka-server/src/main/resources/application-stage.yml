@@ -1,0 +1,21 @@
+#spring.application.name=eureka-server
+spring:
+  application:
+    name: eureka-server
+  devtools:
+    restart:
+      enabled: true
+
+server:
+  port: 8761
+
+eureka:
+  client:
+    register-with-eureka: false
+    fetch-registry: false
+#    service-url: http://localhost
+
+  instance:
+    hostname: localhost
+  server:
+    renewal-percent-threshold: 0.85

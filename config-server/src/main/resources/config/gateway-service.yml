@@ -4,8 +4,9 @@ spring:
   cloud:
     gateway:
       routes:
+        # 路由到 user-service
         - id: user-service
-          uri: lb://user-service  # 使用服务发现的方式代替硬编码 IP 地址
+          uri: lb://user-service  # 通过负载均衡调用 user-service
           predicates:
             - Path=/users/**
           filters:
@@ -21,11 +22,33 @@ spring:
               args:
                 name: Cache-Control
                 value: no-cache, no-store, must-revalidate
+
+        # 路由到 stub-service
+        - id: stub-service
+          uri: lb://stub-service  # 通过负载均衡调用 stub-service
+          predicates:
+            - Path=/stubs/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: stubServiceCircuitBreaker
+                fallbackUri: forward:/fallback/stub-service
+            - name: Retry
+              args:
+                retries: 3
+                statuses: BAD_GATEWAY, GATEWAY_TIMEOUT, SERVICE_UNAVAILABLE
+            - name: AddResponseHeader
+              args:
+                name: Cache-Control
+                value: no-cache, no-store, must-revalidate
+      # Default filters for all routes
+      default-filters:
+        - DedupeResponseHeader=Vary Access-Control-Allow-Origin Access-Control-Allow-Credentials, RETAIN_UNIQUE
+
       globalcors:
         cors-configurations:
           '[/**]':
             allowedOrigins: "http://154.23.243.155"  # 仅允许生产环境的域名
-#            allowedOrigins: "https://your-production-domain.com"  # 仅允许生产环境的域名
             allowedHeaders: "*"
             allowedMethods: "*"
             allowCredentials: true
@@ -33,16 +56,11 @@ spring:
         locator:
           enabled: true
           lower-case-service-id: true
-  #      default-filters:
-#        - DedupeResponseHeader=Vary Access-Control-Allow-Origin Access-Control-Allow-Credentials, RETAIN_UNIQUE
-#    loadbalancer:
-#      config:
-#        default:
-#          hint: random
+
 
   data:
     redis:
-      host: 154.23.243.155  # Redis 用于限流、Session 共享
+      host: localhost  # Redis 用于限流、Session 共享
       port: 6379
       password: redis_y3yDJk
 
@@ -77,7 +95,7 @@ logging:
     org.springframework.cloud.gateway: DEBUG
     io.github.resilience4j: DEBUG
   file:
-    name: logs/gateway-service.log
+    name: logs/config-service.log
   logback:
     rollingpolicy:
       max-file-size: 10MB
@@ -105,3 +123,8 @@ resilience4j:
     instances:
       userServiceCircuitBreaker:
         baseConfig: default
+
+
+some:
+  config:
+    value: refresh !

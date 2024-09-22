@@ -19,23 +19,13 @@ spring:
 server:
   port: 1082
 
-
-management:
-  endpoint:
-    health:
-      show-details: always
-  endpoints:
-    web:
-      exposure:
-        include: health,info,metrics  # 开放健康检查和指标监控
-
 logging:
   level:
     root: WARN  # 生产环境中减少日志输出，减少 IO 开销
     org.springframework.cloud.gateway: INFO
   file:
     #    path: /var/log/gateway-service  # 日志文件保存路径
-    name: gateway-service.log
+    name: log/user-service.log
     path: logs
 
   logback:
