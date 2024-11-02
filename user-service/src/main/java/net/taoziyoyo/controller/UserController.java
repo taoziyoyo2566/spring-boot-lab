@@ -54,6 +54,8 @@ public class UserController {
 
     @GetMapping("/welcome")
     public String welcome() {
+
+        logger.info("call method: {}","welcome");
         return welcomeMessage;
     }
 

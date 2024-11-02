@@ -4,14 +4,3 @@ spring:
   profiles:
     active: native
 
-management:
-  endpoint:
-    health:
-      show-details: always
-  endpoints:
-    web:
-      exposure:
-        include: health,info,metrics  # 开放健康检查和指标监控
-
-custom:
-  welcome-message: "Hello from User Service!"
